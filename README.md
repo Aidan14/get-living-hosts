@@ -33,4 +33,6 @@ python main.py
 
 `CHECK_TIMEOUT`: Adjust the timeout for the HTTP/HTTPS request checks (in seconds). This can greatly reduce the time the script takes to complete.
 
+`PROTOCOLS`: Remove the **_http_** protocol if you are sure that all the hosts are using https. This should half the time it takes to complete the process.
+
 `options.add_argument('--headless')`: Comment it if you want to view the browser during execution.
