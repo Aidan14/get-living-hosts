@@ -1,6 +1,9 @@
 hosts/*
+!hosts/.gitkeep
 screenshots/*
+!screenshots/.gitkeep
 hosts-check/*
+!hosts-check/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
