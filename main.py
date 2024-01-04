@@ -2,6 +2,9 @@ from data import hosts as hosts
 import requests
 from selenium import webdriver
 import datetime
+import os
+import time
+
 
 CHECK_TIMEOUT = 5
           
@@ -29,29 +32,51 @@ def main():
   options = webdriver.ChromeOptions()
   options.add_argument('--headless') # Runs it without GUI
   driver = webdriver.Chrome(options=options)
-  date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+  directory = input('Insert output directory \n')
+  directory = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") if directory == "" else directory
+  
+  output_path = f'./output/{directory}'
+  
+  if not os.path.exists(output_path):
+    os.mkdir(output_path)
+  
+  while not os.path.exists(output_path):
+    print(f"Creating directory '{directory}'...")
+    time.sleep(1)
+  
+  if not os.path.exists(f'{output_path}/screenshots'):
+    os.mkdir(f'{output_path}/screenshots')
+    
+  if not os.path.exists(f'{output_path}/hosts'):
+    os.mkdir(f'{output_path}/hosts')
+    
+  if not os.path.exists(f'{output_path}/hosts-check'):
+    os.mkdir(f'{output_path}/hosts-check')
+    
+  while not os.path.exists(f'{output_path}/screenshots') and not os.path.exists(f'{output_path}/hosts') and not os.path.exists(f'{output_path}/hosts-check'):
+    print(f"Creating subdirectories...")
+    time.sleep(1)
     
   for host in hosts:
-    with open(f'./hosts/hosts_{date}.txt', 'a') as file:
+    with open(f'{output_path}/hosts/hosts.txt', 'a') as file:
       file.write(f'{host}\n')
       
     isAlive = check_host_alive(host)
     print(f'{host}: {isAlive}')
-    with open(f'./hosts-check/hosts-check_{date}.txt', 'a') as file:
+    with open(f'{output_path}/hosts-check/hosts-check.txt', 'a') as file:
       file.write(f'{host}: {isAlive}\n')
     
     if isAlive:
-      output_path = f'./screenshots/{host}_{date}.png'
             
       http_url = f"http://{host}"
       https_url = f"https://{host}"
       try:
           driver.get(https_url)
-          driver.save_screenshot(output_path)
+          driver.save_screenshot(f'{output_path}/screenshots/{host}.png')
           
       except:
           driver.get(http_url)
-          driver.save_screenshot(output_path)
+          driver.save_screenshot(f'{output_path}/screenshots/{host}.png')
           
   driver.quit()
   
