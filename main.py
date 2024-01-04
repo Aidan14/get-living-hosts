@@ -1,4 +1,4 @@
-from data import hosts as  hosts
+from data import hosts as hosts
 import requests
 from selenium import webdriver
 import datetime
