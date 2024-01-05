@@ -10,7 +10,7 @@ This Python script checks the availability of a list of hosts through both HTTP 
 ## Installation
 
 ```bash
-$ pip install requests selenium
+$ pip install selenium requests_html
 ```
 
 ## Usage

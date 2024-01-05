@@ -1,24 +1,23 @@
 from data import hosts as hosts
-import requests
+from requests_html import HTMLSession
 from selenium import webdriver
 import datetime
 import os
 
-CHECK_TIMEOUT = 1
+CHECK_TIMEOUT = 1 # Measured in seconds
 PROTOCOLS = ['https'] # Change to ['http', 'https'] if you want to check both protocols
           
 def check_host_alive(host, protocols=['https', 'http']):
     for protocol in protocols:
-        url = f"{protocol}://{host}"
-
-        try:
-            response = requests.get(url, timeout=CHECK_TIMEOUT)
-            if 200 <= response.status_code < 300:
-                return True
-        except requests.ConnectionError:
-            pass
-
-    return False
+      session = HTMLSession()
+      url = f"{protocol}://{host}"
+      
+      try:
+          response = session.get(url, timeout=CHECK_TIMEOUT)
+          response.raise_for_status()  # Raise an exception for HTTP errors
+          return True
+      except Exception:
+          return False
   
 def create_output_directories(directory):
     output_path = f'./output/{directory}'
@@ -60,7 +59,7 @@ def main():
   driver = webdriver.Chrome(options=options)
   os.system('cls')
   
-  directory = input('Insert output directory \n')
+  directory = input('Insert output directory (leave empty to assign the current date) \n')
   directory = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") if directory == "" else directory
   print (f'Output directory: {directory}')
   print('')
